@@ -40,9 +40,8 @@ def main(page: Page):
                         tempo_contribuicao,
                         media_salarial,
                         opcao,
-                        ElevatedButton(text="Calcular", on_click=verificar_campos),
-                        ElevatedButton(text="Regras", on_click=verificar_campos),
-                        txt_alerta,
+                        ElevatedButton(text="Calcular", on_click=verificar_campos, width=page.window.width),
+                        alerta,
 
 
                     ],
@@ -54,22 +53,21 @@ def main(page: Page):
             page.views.append(
                 View(
                     "/regras", [
-                        AppBar(title=Text("regras da aposentadoria"), center_title=True, bgcolor=Colors.PINK),
-                        ElevatedButton(text="regras", on_click=lambda _: page.go("/simulacao")),
-
-                        ft.TextField('Regras Básicas de Aposentadoria:', text_size=18),
-                        ft.Text('Aposentadoria por Idade:', size=16),
-                        ft.Text('Homens: 65 anos de idade e pelo menos 15 anos de contribuição:', size=14),
-                        ft.Text('Mulheres: 62 anos de idade e pelo menos 15 anos de contribuição:', size=14),
-
-                        ft.TextField('Aposentadoria por Tempo de Contribuição:', text_size=18),
-                        ft.Text('Homens: 35 anos de contribuição.', size=16),
-                        ft.Text('Mulheres: 30 anos de contribuição.', size=14),
-
-                        ft.TextField('Valor Estimado do Benefício:', text_size=18),
-
-                        ft.Text(' O valor da aposentadoria será uma média de 60% da média salarial informada,'
-                                ' acrescido de 2% por ano que exceder o tempo mínimo de contribuição.', size=16),
+                        AppBar(title=Text("Inicio"), bgcolor="PINK"),
+                        Text(value="As regras de aposentadoria por idade em 2025 são: "
+                                   "\n"
+                                   "\n"
+                                   " Aposentadoria por Idade: \n"
+                                   "Homens: 65 anos de idade e pelo menos 15 anos de contribuição. \n"
+                                   "Mulheres: 62 anos de idade e pelo menos 15 anos de contribuição.\n "
+                                   "\n"
+                                   "Aposentadoria por Tempo de Contribuição: \n "
+                                   "Homens: 35 anos de contribuição. \n"
+                                   "Mulheres: 30 anos de contribuição. \n"
+                                   "\n"
+                                   "Valor Estimado do Benefício: O valor da aposentadoria será uma média de 60% "
+                                   "da média salarial informada, acrescido de 2% por ano que exceder o tempo mínimo "
+                                   "de contribuição.")
 
                     ]
                 )
@@ -80,10 +78,10 @@ def main(page: Page):
                 View(
                     '/resultados', [
                         Text('Resultados'),
-                        txt_aposentadoria_reprovada,
-                        txt_aposentadoria_aprovada,
-                        txt_valor_beneficio,
-                        txt_alerta
+                        com_aposentadoria,
+                        sem_aposentadoria,
+                        beneficio,
+                        alerta
                     ]
                 )
             )
@@ -112,11 +110,11 @@ def main(page: Page):
                 page.go('/resultados')
         except ValueError:
             print('')
-            txt_alerta.value = 'Preencha os campos corretamente'
+            alerta.value = 'Preencha os campos corretamente'
             page.update()
 
-    def limpar_txt_alerta(e):
-        txt_alerta.value = ''
+    def limpar_alerta(e):
+        alerta.value = ''
         page.update()
 
     def calcular_beneficio():
@@ -130,79 +128,73 @@ def main(page: Page):
             if genero == 'masculino':
                 if categoria == 'idade':
                     if idade_var >= 65 and tempo_contribuicao_var >= 15:
-                        txt_aposentadoria_aprovada.value = 'APROVADO'
+                        com_aposentadoria.value = 'Você pode se aposentar!'
                         v = salario * (0.6 + 0.02 * (tempo_contribuicao_var - 15))
-                        txt_valor_beneficio.value = v
+                        beneficio.value = v
                     elif idade_var < 65 and tempo_contribuicao_var < 15:
-                        txt_aposentadoria_reprovada.value = 'REPROVADO (tempo e idade)'
+                        sem_aposentadoria.value = 'Você não pode se aposentar'
                     elif idade_var < 65 and tempo_contribuicao_var >= 15:
-                        txt_aposentadoria_reprovada.value = 'REPROVADO (idade)'
+                        sem_aposentadoria.value = 'Você não pode se aposentar'
                     else:
-                        txt_aposentadoria_reprovada.value = 'REPROVADO (tempo)'
+                        sem_aposentadoria.value = 'Você não pode se aposentar'
                 else:
                     if tempo_contribuicao_var >= 35:
-                        txt_aposentadoria_aprovada.value = 'APROVADO'
+                        com_aposentadoria.value = 'Você pode se aposentar'
                         v = salario * (0.6 + 0.02 * (tempo_contribuicao_var - 35))
-                        txt_valor_beneficio.value = v
+                        beneficio.value = v
                     else:
-                        txt_aposentadoria_reprovada.value = 'REPROVADO'
+                        sem_aposentadoria.value = 'Você não pode se aposentar'
             elif genero == 'feminino':
                 if categoria == 'idade':
                     if idade_var >= 62 and tempo_contribuicao_var >= 15:
-                        txt_aposentadoria_aprovada.value = 'APROVADO'
+                        com_aposentadoria.value = 'Você pode se aposentar'
                         v = salario * (0.6 + 0.02 * (tempo_contribuicao_var - 15))
-                        txt_valor_beneficio.value = v
+                        beneficio.value = v
                     elif idade_var < 62 and tempo_contribuicao_var < 15:
-                        txt_aposentadoria_reprovada.value = 'REPROVADO (tempo e idade)'
+                        sem_aposentadoria.value = 'Você não pode se aposentar'
                     elif idade_var < 62 and tempo_contribuicao_var >= 15:
-                        txt_aposentadoria_reprovada.value = 'REPROVADO (idade)'
+                        sem_aposentadoria.value = 'Você não pode se aposentar'
                     else:
-                        txt_aposentadoria_reprovada.value = 'REPROVADO (tempo)'
+                        sem_aposentadoria.value = 'Você não pode se aposentar'
                 else:
                     if tempo_contribuicao_var >= 30:
-                        txt_aposentadoria_aprovada.value = "APROVADO"
+                        com_aposentadoria.value = "Você pode se aposentar"
                         v = salario * (0.6 + 0.02 * (tempo_contribuicao_var - 30))
-                        txt_valor_beneficio.value = v
+                        beneficio.value = v
                     else:
-                        txt_aposentadoria_reprovada.value = "REPROVADO"
+                        sem_aposentadoria.value = "Você não pode se aposentar"
 
         except ValueError:
-            txt_alerta.value = 'Preencha os campos corretamente'
+            alerta.value = 'Preencha todos campos'
         page.update()
 
-    idade = ft.TextField(label='informe quantos anos vc tem',
-                         border_color=Colors.CYAN,
-                         border_width=2,
-                         border_radius=10,
-                         focused_border_color=Colors.RED,
-                         on_click=limpar_txt_alerta
-                         )
-    # idade = ft.TextField(label="Idade", hint_text="Insira sua idade:")
-    tempo_contribuicao = ft.TextField(label="tempo contribuição", hint_text="quantos anos voce trabalhou", on_click=limpar_txt_alerta)
+    idade =  ft.TextField(label='Idade', border_color=Colors.PINK,
+                                  border_radius=10, on_click=limpar_alerta)
+    tempo_contribuicao = ft.TextField(label='Tempo de contribuição', border_color=Colors.PINK,
+                                  border_radius=10, on_click=limpar_alerta)
 
     genero_escolhido = ft.Dropdown(
-        label="Menu genero",
+        label="Genero",
         width=page.window.width,
-        fill_color=Colors.RED,
-        border_radius=60,
-        on_change=limpar_txt_alerta,
+        border_color=Colors.PINK,
+        on_change=limpar_alerta,
 
         options=[
             Option(key='masculino', text='masculino'), Option(key='feminino', text='feminino')],
 
     )
 
-    media_salarial = ft.TextField(label='Média salarial', border_color=Colors.CYAN, border_width=2,
-                                  border_radius=10, focused_border_color=Colors.RED, on_click=limpar_txt_alerta)
+    media_salarial = ft.TextField(label='Média salarial', border_color=Colors.PINK,
+                                  border_radius=10, on_click=limpar_alerta)
 
-    opcao = ft.RadioGroup(on_change=limpar_txt_alerta, content=ft.Row([
+    opcao = ft.RadioGroup(on_change=limpar_alerta, content=ft.Row([
         ft.Radio(value='tempo', label="Tempo de contribuição"),
         ft.Radio(value='idade', label="Idade")
     ]))
 
-    txt_alerta = ft.Text(value='', italic=True, color="pink", size=22, bgcolor="#191970")
-    txt_aposentadoria_reprovada = ft.Text(value='', italic=True, color="red", size=22, bgcolor="cyan")
-    txt_aposentadoria_aprovada = ft.Text(value='', italic=True, color="green", size=22, bgcolor="cyan")
-    txt_valor_beneficio = ft.Text(value='', size=22, bgcolor="#191970", color="yellow")
+    alerta = ft.Text(value='', color="pink",)
+    sem_aposentadoria = ft.Text(value='', color="pink")
+    com_aposentadoria = ft.Text(value='', color="pink")
+    beneficio = ft.Text(value='', color="pink")
 
 ft.app(main)
