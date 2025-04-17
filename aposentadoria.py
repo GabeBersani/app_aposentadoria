@@ -4,6 +4,7 @@ from flet import AppBar, ElevatedButton, Page, Text, View
 from flet.core.colors import Colors
 from flet.core.dropdown import Option
 from flet.core.textfield import TextField
+from rich import align
 
 
 def main(page: Page):
@@ -20,6 +21,7 @@ def main(page: Page):
                 "/",
                 [
                     AppBar(title=Text(''), center_title=True, bgcolor=Colors.PINK),
+                    ft.Image(src="src/assets/apo.png", width=350),
                     ElevatedButton(text="Simular aposentadoria", width=page.window.width,
                                    on_click=lambda _: page.go("/simular_aposentadoria")),
                     ElevatedButton(text="Regras aposentadoria", width=page.window.width,
@@ -33,8 +35,8 @@ def main(page: Page):
             page.views.append(
                 View(
                     "/simular_aposentadoria", [
-                        AppBar(title=Text("simulação de aposentadoria"), center_title=True, bgcolor=Colors.PINK),
-
+                        AppBar(title=Text(""), center_title=True, bgcolor=Colors.PINK),
+                        Text(value="Simulação aposentadoria"),
                         genero_escolhido,
                         idade,
                         tempo_contribuicao,
@@ -53,7 +55,8 @@ def main(page: Page):
             page.views.append(
                 View(
                     "/regras", [
-                        AppBar(title=Text("Inicio"), bgcolor="PINK"),
+                        AppBar(title=Text(""), bgcolor="PINK"),
+                        Text(value="Regras aposentadoria"),
                         Text(value="As regras de aposentadoria por idade em 2025 são: "
                                    "\n"
                                    "\n"
@@ -174,7 +177,7 @@ def main(page: Page):
                                   border_radius=10, on_click=limpar_alerta)
 
     genero_escolhido = ft.Dropdown(
-        label="Genero",
+        label="Gênero",
         width=page.window.width,
         border_color=Colors.PINK,
         on_change=limpar_alerta,
