@@ -54,7 +54,7 @@ def main(page: Page):
             page.views.append(
                 View(
                     "/regras", [
-                        AppBar(title=Text("regras da aposentadoria"), center_title=True, bgcolor=Colors.DEEP_PURPLE),
+                        AppBar(title=Text("regras da aposentadoria"), center_title=True, bgcolor=Colors.PINK),
                         ElevatedButton(text="regras", on_click=lambda _: page.go("/simulacao")),
 
                         ft.TextField('Regras Básicas de Aposentadoria:', text_size=18),
