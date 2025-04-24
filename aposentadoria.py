@@ -1,10 +1,9 @@
 import flet as ft
-from flet.core.app_bar import AppBar
 from flet import AppBar, ElevatedButton, Page, Text, View
 from flet.core.colors import Colors
 from flet.core.dropdown import Option
-from flet.core.textfield import TextField
-from rich import align
+
+
 
 
 def main(page: Page):
